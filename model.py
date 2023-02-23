@@ -1,6 +1,4 @@
 from random import random
-from tensorflow import keras
-from keras.datasets import mnist
 import numpy as np
 
 
