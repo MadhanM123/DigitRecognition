@@ -1,7 +1,3 @@
-"""
-mnist_loader
-"""
-
 import pickle
 import gzip
 

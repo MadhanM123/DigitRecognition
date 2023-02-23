@@ -1,10 +1,7 @@
 from random import shuffle
 import numpy as np
 
-#Represents the neural network
-#Network(2,3,1) would initalize neural network with 2 neurons in input layer, 3 neurons in hidden layer, 1 neuron in output layer
 class Network:
-
     def __init__(self, sizes):
         """Random initalization for biases and weights"""
 
@@ -49,9 +46,9 @@ class Network:
 
         for x,y in batch:
             delta_bias_nabla, delta_weight_nabla = self.backprop(x,y)
-            bias_nabla = [nb + dbn for nb,dbn in zip(bias_nabla,delta_bias_nabla)]
             weight_nabla = [wb + dwn for wb,dwn in zip(weight_nabla,delta_weight_nabla)]
-
+            bias_nabla = [nb + dbn for nb,dbn in zip(bias_nabla,delta_bias_nabla)]
+            
         self.weights = [w - eta/len(batch) * wn for w,wn in zip(self.weights,weight_nabla)]
         self.biases = [b - eta/len(batch) * bn for b,bn in zip(self.biases,bias_nabla)]
 
@@ -93,18 +90,19 @@ class Network:
         return output_activations - y
     
     def evaluate(self, test_data):
+        "Evaluates accuracy for test data"
+
         results = [(np.argmax(self.feedforward(x)),y) for (x,y) in test_data]
         return sum(int(x == y) for (x,y) in results)
+
 
 #Out of class functions
 def sigmoid(z):
     """Sigmoid function"""
-
     return 1.0 / (1.0 + np.exp(-z))
 
 def sigmoid_prime(z):
     "Derivative of the sigmoid function"
-
     return sigmoid(z) * (1- sigmoid(z))
 
 
