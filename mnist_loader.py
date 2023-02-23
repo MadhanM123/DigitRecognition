@@ -1,42 +1,30 @@
+"""
+mnist_loader
+"""
+
+import pickle
+import gzip
+
 import numpy as np
-from keras.datasets import mnist
-from sklearn.model_selection import train_test_split
 
+def load_data():
+    f = gzip.open('resources/mnist.pkl.gz', 'rb')
+    training_data, validation_data, test_data = pickle.load(f, encoding="latin1")
+    f.close()
+    return (training_data, validation_data, test_data)
 
-def get_data_wrapper():
-    (X,y) , (test_X, test_y) = mnist.load_data()
-    # print(X.shape)
-    # train_X = X.reshape(60000,784)
-    # print(train_X.shape)
-    # np.random.shuffle(train_X)
-    # valid_X = train_X[50000:,::]
-    # train_X = train_X[:50000,::]
-    # print(valid_X.shape)
-    # print(train_X.shape)
-    # print(y.shape)
-    Y = np.concatenate((y,test_y),axis=0)
-    X = np.concatenate((X,test_X),axis=0)
-    X = X.reshape(70000,784)
-    print(X.shape)
-    print(Y.shape)
+def load_data_wrapper():
+    tr_d, va_d, te_d = load_data()
+    training_inputs = [np.reshape(x, (784, 1)) for x in tr_d[0]]
+    training_results = [vectorized_result(y) for y in tr_d[1]]
+    training_data = zip(training_inputs, training_results)
+    validation_inputs = [np.reshape(x, (784, 1)) for x in va_d[0]]
+    validation_data = zip(validation_inputs, va_d[1])
+    test_inputs = [np.reshape(x, (784, 1)) for x in te_d[0]]
+    test_data = zip(test_inputs, te_d[1])
+    return (training_data, validation_data, test_data)
 
-    # X_train,y_train,X_test,y_test = train_test_split(X,Y,random_state=104,train_size=0.7,shuffle=True)
-    # X_val,y_val,X_test,y_test = train_test_split(X_test,y_test,random_state=48,test_size=0.5,shuffle=True)
-
-    X_train,X_test,y_train,y_test = train_test_split(X,Y,random_state=104,train_size=0.7,shuffle=True)
-    X_val,X_test,y_val,y_test = train_test_split(X_test,y_test,random_state=48,test_size=0.5,shuffle=True)
-
-    train_data = zip(X_train,y_train)
-    val_data = zip(X_val,y_val)
-    test_data = zip(X_test,y_test)
-
-    
-    print(X_train.shape)
-    print(y_train.shape)
-    print(X_val.shape)
-    print(y_val.shape)
-    print(X_test.shape)
-    print(y_test.shape)
-
-    return train_data,val_data,test_data
-
+def vectorized_result(j):
+    e = np.zeros((10, 1))
+    e[j] = 1.0
+    return e
