@@ -1,1 +1,1 @@
-# Uses a multilayer perceptron coded in Python to recognize hand-written numbers
+# Uses a multilayer SGD neural network coded in Python to recognize hand-written numbers
